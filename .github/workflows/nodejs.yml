@@ -15,4 +15,5 @@ jobs:
       - uses: borales/actions-yarn@v2.0.0
         with:
           auth-token: ${{ secrets.NPM_AUTH_TOKEN }}
+          registry-url:  registry.yarnpkg.com
           cmd: publish --tag next --new-version 1.0.0-$(date +%s) --non-interactive
