@@ -1,25 +1,18 @@
-name: Node CI
-
+name: CI
 on: [push]
-
 jobs:
   build:
-
+    name: Build & Publish Next
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-        NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-    - name: yarn install, build, test and publish
-      run: |
-        echo "//registry.yarnpkg.com/:_authToken=$NPM_TOKEN" >>~/.npmrc
-        yarn
-        yarn run build
-        yarn publish --non-interactive --tag next
-        
-      env:
-        CI: true
+      - uses: actions/checkout@v1
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install # will run `yarn install` command
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build # will run `yarn build` command
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          auth-token: ${{ secrets.NPM_WUTH_TOKEN }}
+          cmd: publish --non-interactive --tag next
