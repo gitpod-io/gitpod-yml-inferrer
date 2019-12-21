@@ -1,10 +1,13 @@
 import 'mocha';
 import * as chai from 'chai';
-import { ConfigInferrer, FS } from './config-inferrer';
+import { ConfigInferrer, Context } from './config-inferrer';
 import { WorkspaceConfig } from './config';
 
-function fs(files: {[path:string]:string}): FS {
+function context(files: {[path:string]:string}): Context {
     return {
+
+        config: {},
+
         async exists(path: string) {
             return path.toString() in files;
         },
@@ -22,7 +25,7 @@ function fs(files: {[path:string]:string}): FS {
 
 async function expect(files: {[path:string]:string}, config: WorkspaceConfig): Promise<void> {
     const cf = new ConfigInferrer();
-    const result = await cf.getConfig(fs(files));
+    const result = await cf.getConfig(context(files));
     chai.assert.equal(JSON.stringify(result, null, '  '), JSON.stringify(config, null, '  '));
 }
 

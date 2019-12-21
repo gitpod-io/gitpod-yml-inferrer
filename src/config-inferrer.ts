@@ -1,10 +1,7 @@
 import { WorkspaceConfig } from "./config";
 
-interface Ctx extends FS {
+export interface Context {
     config: WorkspaceConfig;
-}
-
-export interface FS {
     getFullPath(path: string): Promise<string>;
     exists(path: string): Promise<boolean>;
     read(path: string): Promise<string | undefined>;
@@ -13,7 +10,7 @@ export interface FS {
 
 export class ConfigInferrer {
 
-    protected contributions:((ctx:Ctx)=>Promise<void>)[] = [
+    protected contributions:((ctx:Context)=>Promise<void>)[] = [
         this.checkNode.bind(this),
         this.checkJava.bind(this),
         this.checkPython.bind(this),
@@ -22,14 +19,7 @@ export class ConfigInferrer {
         this.checkMake.bind(this)
     ]
     
-    async getConfig(fs: FS): Promise<WorkspaceConfig> {
-        const ctx: Ctx = {
-            getFullPath: fs.getFullPath.bind(fs),
-            exists: fs.exists.bind(fs),
-            read: fs.read.bind(fs),
-            list: fs.list.bind(fs),
-            config: {}
-        };
+    async getConfig(ctx: Context): Promise<WorkspaceConfig> {
         for (const contrib of this.contributions) {
             try {
                 await contrib(ctx);
@@ -40,7 +30,7 @@ export class ConfigInferrer {
         return ctx.config;
     }
 
-    protected async checkNode(ctx: Ctx): Promise<void> {
+    protected async checkNode(ctx: Context): Promise<void> {
         const pckjsonContent = await ctx.read('package.json');
         if (!pckjsonContent) {
             return;
@@ -69,7 +59,7 @@ export class ConfigInferrer {
         }
     }
 
-    protected async checkJava(ctx: Ctx): Promise<void> {
+    protected async checkJava(ctx: Context): Promise<void> {
         if (await ctx.exists('build.gradle')) {
             let cmd = 'gradle';
             if (await ctx.exists('gradlew')) {
@@ -88,11 +78,11 @@ export class ConfigInferrer {
         }
     }
 
-    protected async isMake(ctx: Ctx) {
+    protected async isMake(ctx: Context) {
         return await ctx.exists('Makefile') || await ctx.exists('makefile');
     }
 
-    protected async checkMake(ctx: Ctx) {
+    protected async checkMake(ctx: Context) {
         if (await ctx.exists('CMakeLists.txt')) {
             this.addCommand(ctx.config, 'cmake .', 'init');
         } else if (await this.isMake(ctx)) {
@@ -100,7 +90,7 @@ export class ConfigInferrer {
         }
     }
 
-    protected async checkPython(ctx: Ctx) {
+    protected async checkPython(ctx: Context) {
         if (await this.isMake(ctx)) {
             // https://docs.python-guide.org/writing/structure/#makefile
             return;
@@ -112,7 +102,7 @@ export class ConfigInferrer {
         }
     }
 
-    protected async checkGo(ctx: Ctx) {
+    protected async checkGo(ctx: Context) {
         if (await ctx.exists('go.mod')) {
             this.addCommand(ctx.config, 'go get', 'init');
             this.addCommand(ctx.config, 'go build ./...', 'init');
@@ -121,7 +111,7 @@ export class ConfigInferrer {
         }
     }
 
-    protected async checkRust(ctx: Ctx) {
+    protected async checkRust(ctx: Context) {
         if (await ctx.exists('Cargo.toml')) {
             this.addCommand(ctx.config, 'cargo build', 'init');
             this.addCommand(ctx.config, 'cargo watch -x run', 'command');
