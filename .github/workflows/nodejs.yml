@@ -4,16 +4,11 @@ jobs:
   build:
     name: Build & Publish Next
     runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN:  ${{ secrets.NPM_AUTH_TOKEN }}  
     steps:
-      - uses: actions/checkout@v1
-      - uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: install # will run `yarn install` command
-      - uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: build # will run `yarn build` command
-      - uses: borales/actions-yarn@v2.0.0
-        with:
-          auth-token: ${{ secrets.NPM_AUTH_TOKEN }}
-          registry-url:  registry.yarnpkg.com
-          cmd: publish --tag next --new-version 1.0.0-$(date +%s) --non-interactive
+      - run: |
+          echo "//registry.yarnpkg.com/:_authToken=$NPM_TOKEN" >>~/.npmrc
+          yarn install
+          yarn build
+          yarn publish --tag next --new-version 1.0.0-$(date +%s) --non-interactive
