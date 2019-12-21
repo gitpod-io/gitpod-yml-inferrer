@@ -12,4 +12,4 @@ jobs:
           echo "//registry.yarnpkg.com/:_authToken=$NPM_TOKEN" >>~/.npmrc
           yarn install
           yarn build
-          yarn publish --tag next --new-version 1.0.0-$(date +%s) --non-interactive
+          yarn publish --tag next --new-version 1.0.0-$(date +%s) --non-interactive --no-git-tag-version
