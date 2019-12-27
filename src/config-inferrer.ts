@@ -1,4 +1,4 @@
-import { WorkspaceConfig } from "./config";
+import { WorkspaceConfig } from './config';
 
 export interface Context {
     config: WorkspaceConfig;
@@ -122,6 +122,12 @@ export class ConfigInferrer {
     protected async checkNuget(ctx: Context) {
         if (await ctx.exists('packages.config')) {
             this.addCommand(ctx.config, 'nuget install', 'init');
+        }
+    }
+
+    protected async checkRuby(ctx: Context) {
+        if (await ctx.exists('Gemfile')) {
+            this.addCommand(ctx.config, 'bundle install', 'init');
         }
     }
 

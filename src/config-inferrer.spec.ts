@@ -156,13 +156,24 @@ describe('config inferrer', () => {
             ]
         })
     ),
-    it("[.NET] nuget",
+    it("[dotnet] nuget",
         async () => expect({
             "packages.config": ''
         },{
             tasks: [
                 {
                     init: "nuget install"
+                }
+            ]
+        })
+    ),
+    it("[ruby] gemfile",
+        async () => expect({
+            "Gemfile": ''
+        },{
+            tasks: [
+                {
+                    init: "bundle install"
                 }
             ]
         })
