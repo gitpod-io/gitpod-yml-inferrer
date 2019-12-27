@@ -155,5 +155,16 @@ describe('config inferrer', () => {
                 }
             ]
         })
+    ),
+    it("[.NET] nuget",
+        async () => expect({
+            "packages.config": ''
+        },{
+            tasks: [
+                {
+                    init: "nuget install"
+                }
+            ]
+        })
     )
 })

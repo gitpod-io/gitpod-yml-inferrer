@@ -10,15 +10,16 @@ export interface Context {
 
 export class ConfigInferrer {
 
-    protected contributions:((ctx:Context)=>Promise<void>)[] = [
+    protected contributions: ((ctx: Context) => Promise<void>)[] = [
         this.checkNode.bind(this),
         this.checkJava.bind(this),
         this.checkPython.bind(this),
         this.checkGo.bind(this),
         this.checkRust.bind(this),
-        this.checkMake.bind(this)
+        this.checkMake.bind(this),
+        this.checkNuget.bind(this),
     ]
-    
+
     async getConfig(ctx: Context): Promise<WorkspaceConfig> {
         for (const contrib of this.contributions) {
             try {
@@ -35,7 +36,7 @@ export class ConfigInferrer {
         if (!pckjsonContent) {
             return;
         }
-        let command: 'yarn'|'npm' = 'npm';
+        let command: 'yarn' | 'npm' = 'npm';
         if (await ctx.exists('yarn.lock')) {
             command = 'yarn';
         }
@@ -50,7 +51,7 @@ export class ConfigInferrer {
                     this.addCommand(ctx.config, command + ' run start', 'command');
                 } else if (pckjson.scripts.dev) {
                     this.addCommand(ctx.config, command + ' run dev', 'command');
-                } else if (pckjson.scripts.watch){
+                } else if (pckjson.scripts.watch) {
                     this.addCommand(ctx.config, command + ' run watch', 'command');
                 }
             }
@@ -118,7 +119,13 @@ export class ConfigInferrer {
         }
     }
 
-    protected addCommand(config: WorkspaceConfig, command: string, phase: 'before'|'init'|'command', unless?:string): void {
+    protected async checkNuget(ctx: Context) {
+        if (await ctx.exists('packages.config')) {
+            this.addCommand(ctx.config, 'nuget install', 'init');
+        }
+    }
+
+    protected addCommand(config: WorkspaceConfig, command: string, phase: 'before' | 'init' | 'command', unless?: string): void {
         if (!config.tasks) {
             config.tasks = [];
         }
@@ -130,6 +137,6 @@ export class ConfigInferrer {
             // skip
             return;
         }
-        config.tasks[0][phase] = (existing ? existing + ' && ':'') + command;
+        config.tasks[0][phase] = (existing ? existing + ' && ' : '') + command;
     }
 }
