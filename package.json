@@ -21,6 +21,7 @@
     },
     "scripts": {
         "build": "tsc",
-        "watch": "tsc --watch"
+        "watch": "tsc --watch",
+        "test": "mocha --no-timeouts --colors --opts mocha.opts **/*.spec.js"
     }
 }
