@@ -18,6 +18,7 @@ export class ConfigInferrer {
         this.checkRust.bind(this),
         this.checkMake.bind(this),
         this.checkNuget.bind(this),
+        this.checkRuby.bind(this),
     ]
 
     async getConfig(ctx: Context): Promise<WorkspaceConfig> {
