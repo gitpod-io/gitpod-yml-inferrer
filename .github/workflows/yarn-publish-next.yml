@@ -1,5 +1,9 @@
 name: CI
-on: [push]
+on:
+  push:
+    branches:
+      - '**'      # matches every branch
+      - '!main'   # excludes main
 jobs:
   build:
     name: Build & Publish Next
