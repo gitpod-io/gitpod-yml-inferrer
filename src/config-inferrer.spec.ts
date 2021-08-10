@@ -30,7 +30,7 @@ async function expect(files: {[path:string]:string}, config: WorkspaceConfig): P
 }
 
 describe('config inferrer', () => {
-    it('check node', 
+    it('check node',
         async () => expect({
             'yarn.lock': '',
             'package.json': `
@@ -42,7 +42,7 @@ describe('config inferrer', () => {
                         "watch": "npx tsc -w"
                     }
                 }
-            `        
+            `
         },{
             tasks: [
                 {
@@ -52,10 +52,10 @@ describe('config inferrer', () => {
             ]
         })
     ),
-    it('[java] mvn wrapper', 
+    it('[java] mvn wrapper',
         async () => expect({
             'pom.xml': '',
-            'mvnw': '' 
+            'mvnw': ''
         },{
             tasks: [
                 {
@@ -64,7 +64,7 @@ describe('config inferrer', () => {
             ]
         })
     ),
-    it('[java] mvn', 
+    it('[java] mvn',
         async () => expect({
             'pom.xml': ''
         },{
@@ -75,10 +75,10 @@ describe('config inferrer', () => {
             ]
         })
     ),
-    it('[java] gradle', 
+    it('[java] gradle',
         async () => expect({
             'build.gradle': '',
-            'pom.xml': '' 
+            'pom.xml': ''
         },{
             tasks: [
                 {
@@ -87,10 +87,10 @@ describe('config inferrer', () => {
             ]
         })
     ),
-    it('[java] gradle wrapper', 
+    it('[java] gradle wrapper',
         async () => expect({
             'build.gradle': '',
-            'gradlew': '' 
+            'gradlew': ''
         },{
             tasks: [
                 {
@@ -99,7 +99,7 @@ describe('config inferrer', () => {
             ]
         })
     ),
-    it('[python] pip install', 
+    it('[python] pip install',
         async () => expect({
             'requirements.txt': ''
         },{
@@ -110,7 +110,7 @@ describe('config inferrer', () => {
             ]
         })
     ),
-    it('[go] go install', 
+    it('[go] go install',
         async () => expect({
             'go.mod': ''
         },{
@@ -122,7 +122,7 @@ describe('config inferrer', () => {
             ]
         })
     ),
-    it('[rust] cargo', 
+    it('[rust] cargo',
         async () => expect({
             'Cargo.toml': ''
         },{
@@ -134,7 +134,7 @@ describe('config inferrer', () => {
             ]
         })
     ),
-    it('[make] make', 
+    it('[make] make',
         async () => expect({
             'Makefile': ''
         },{
@@ -145,7 +145,7 @@ describe('config inferrer', () => {
             ]
         })
     ),
-    it('[make] cmake', 
+    it('[make] cmake',
         async () => expect({
             'CMakeLists.txt': ''
         },{
