@@ -22,6 +22,7 @@
     "scripts": {
         "build": "tsc",
         "watch": "tsc --watch",
-        "test": "mocha --no-timeouts --colors --opts mocha.opts **/*.spec.js"
+        "test": "mocha --no-timeouts --colors --opts mocha.opts **/*.spec.js",
+        "release": "npm version patch && git push --tags"
     }
 }
