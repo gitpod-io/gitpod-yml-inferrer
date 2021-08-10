@@ -1,6 +1,6 @@
 {
     "name": "gitpod-yml-inferrer",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "description": ".gitpod-yml inference",
     "main": "./lib/config-inferrer.js",
     "types": "./lib/config-inferrer.d.ts",
