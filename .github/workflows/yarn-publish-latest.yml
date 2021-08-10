@@ -1,7 +1,6 @@
 name: CI
 on:
   push:
-    # Pattern matched against refs/tags
     tags:
       - '*'
 jobs:
