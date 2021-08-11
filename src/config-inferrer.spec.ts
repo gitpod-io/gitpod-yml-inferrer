@@ -5,21 +5,9 @@ import { WorkspaceConfig } from './config';
 
 function context(files: {[path:string]:string}): Context {
     return {
-
         config: {},
-
-        async exists(path: string) {
-            return path.toString() in files;
-        },
-        async getFullPath(path: string) {
-            return path.toString();
-        },
-        async list(path: string) {
-            return Object.keys(files).filter(c => c.startsWith(path.toString())).map(c => files[c]);
-        },
-        async read(path: string) {
-            return files[path.toString()];
-        },
+        exists: async (path: string) => path.toString() in files,
+        read: async (path: string) => files[path.toString()],
     }
 }
 

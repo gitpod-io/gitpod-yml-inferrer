@@ -2,10 +2,8 @@ import { WorkspaceConfig } from './config';
 
 export interface Context {
     config: WorkspaceConfig;
-    getFullPath(path: string): Promise<string>;
     exists(path: string): Promise<boolean>;
     read(path: string): Promise<string | undefined>;
-    list(folderPath: string): Promise<string[]>;
 }
 
 export class ConfigInferrer {
