@@ -45,6 +45,8 @@ export class ConfigInferrer {
             if (pckjson.scripts) {
                 if (pckjson.scripts.build) {
                     this.addCommand(ctx.config, command + ' run build', 'init');
+                } else if (pckjson.scripts.compile) {
+                    this.addCommand(ctx.config, command + ' run compile', 'init');
                 }
                 if (pckjson.scripts.start) {
                     this.addCommand(ctx.config, command + ' run start', 'command');
@@ -96,9 +98,16 @@ export class ConfigInferrer {
             return;
         }
         if (await ctx.exists('requirements.txt')) {
-            this.addCommand(ctx.config, 'pip install -r ./requirements.txt', 'init');
+            this.addCommand(ctx.config, 'pip install -r requirements.txt', 'init');
         } else if (await ctx.exists('setup.py')) {
             this.addCommand(ctx.config, 'pip install .', 'init');
+        }
+        if (await ctx.exists('main.py')) {
+            this.addCommand(ctx.config, 'python main.py', 'command');
+        } else if (await ctx.exists('app.py')) {
+            this.addCommand(ctx.config, 'python app.py', 'command');
+        } else if (await ctx.exists('runserver.py')) {
+            this.addCommand(ctx.config, 'python runserver.py', 'command');
         }
     }
 
@@ -125,8 +134,15 @@ export class ConfigInferrer {
     }
 
     protected async checkRuby(ctx: Context) {
-        if (await ctx.exists('Gemfile')) {
+        if (await ctx.exists('bin/setup')) {
+            this.addCommand(ctx.config, 'bin/setup', 'init');
+        } else if (await ctx.exists('Gemfile')) {
             this.addCommand(ctx.config, 'bundle install', 'init');
+        }
+        if (await ctx.exists('bin/startup')) {
+            this.addCommand(ctx.config, 'bin/startup', 'command');
+        } else if (await ctx.exists('bin/rails')) {
+            this.addCommand(ctx.config, 'bin/rails server', 'command');
         }
     }
 
