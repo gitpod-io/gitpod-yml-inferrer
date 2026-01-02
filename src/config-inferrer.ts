@@ -11,12 +11,13 @@ export class ConfigInferrer {
     protected contributions: ((ctx: Context) => Promise<void>)[] = [
         this.checkNode.bind(this),
         this.checkJava.bind(this),
+        this.checkMake.bind(this),
         this.checkPython.bind(this),
         this.checkGo.bind(this),
         this.checkRust.bind(this),
-        this.checkMake.bind(this),
         this.checkNuget.bind(this),
         this.checkRuby.bind(this),
+        this.checkDockerCompose.bind(this),
     ]
 
     async getConfig(ctx: Context): Promise<WorkspaceConfig> {
@@ -143,6 +144,12 @@ export class ConfigInferrer {
             this.addCommand(ctx.config, 'bin/startup', 'command');
         } else if (await ctx.exists('bin/rails')) {
             this.addCommand(ctx.config, 'bin/rails server', 'command');
+        }
+    }
+
+    protected async checkDockerCompose(ctx: Context) {
+        if (await ctx.exists('docker-compose.yml')) {
+            this.addCommand(ctx.config, 'docker-compose up', 'command');
         }
     }
 
